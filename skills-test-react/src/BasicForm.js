@@ -1,62 +1,62 @@
-import React, { useState } from 'react';
-import { Formik, Field, Form } from 'formik';
+import React from 'react';
+import { useFormik } from 'formik';
+
 import {
   Checkbox,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Paper,
   Button,
+  TextField,
+  Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const BasicForm = () => {
-  const [dataRows, setDataRows] = useState([]);
+import { useSelector, useDispatch } from 'react-redux';
+import { addTodo, deleteTodo, changeInput } from './store/basicFormSlice';
 
-  const deleteRow = (index) => {
-    const newDataRows = [...dataRows];
-    newDataRows.splice(index, 1);
-    setDataRows(newDataRows);
-  };
+const BasicForm = () => {
+  const basicForm = useSelector((state) => state.basicForm);
+  const { dataRows, input } = basicForm;
+  const dispatch = useDispatch();
+
+  const formik = useFormik({
+    initialValues: {
+      todo: '',
+    },
+    onSubmit: () => {
+      input && !dataRows.includes(input) && dispatch(addTodo(input));
+    },
+  });
 
   return (
     <div>
-      <h1>TODO LIST</h1>
-
-      <Formik
-        initialValues={{
-          todo: '',
-        }}
-        onSubmit={(values) => {
-          const { todo } = values;
-          todo && setDataRows([...dataRows, todo]);
-        }}
-      >
-        <Form>
-          <label htmlFor='todo'>Add ToDo Items</label>
-          <Field
-            id='todo'
-            name='todo'
-            placeholder='Take out the trash'
-            type='text'
-          />
-          <button type='submit'>Submit</button>
-        </Form>
-      </Formik>
-
+      <Typography variant='h1' gutterBottom>
+        Todo List
+      </Typography>{' '}
+      <form onSubmit={formik.handleSubmit}>
+        <TextField
+          size='small'
+          variant='filled'
+          sx={{ mr: 2 }}
+          id='todo'
+          name='todo'
+          label='Add Todo Items'
+          placeholder='Take out the trash'
+          helperText='Click Submit To Create Your Todo List'
+          value={input}
+          onChange={(e) => dispatch(changeInput(e.target.value))}
+        />
+        <Button color='primary' variant='contained' size='large' type='submit'>
+          Submit
+        </Button>
+      </form>
       {dataRows.length > 0 && (
         <TableContainer sx={{ m: 2, maxWidth: 650 }} component={Paper}>
           <Table aria-label='simple table'>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <strong>ToDo Items</strong>
-                </TableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {dataRows.map((row, idx) => (
                 <TableRow key={idx}>
@@ -71,7 +71,7 @@ const BasicForm = () => {
                       size='small'
                       color='error'
                       onClick={() => {
-                        deleteRow(idx);
+                        dispatch(deleteTodo(idx));
                       }}
                     >
                       Delete Row

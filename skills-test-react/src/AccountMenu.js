@@ -1,12 +1,14 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-
+import {
+  Box,
+  Menu,
+  MenuItem,
+  IconButton,
+  Typography,
+  Tooltip,
+  Avatar,
+} from '@mui/material/';
+import { Link } from 'react-router-dom';
 
 const AccountMenu = ({ onClick }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -21,14 +23,14 @@ const AccountMenu = ({ onClick }) => {
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-        <Typography sx={{ minWidth: 100 }}>profile</Typography>
-        <Tooltip title="Account settings">
+        <Typography sx={{ minWidth: 100 }}>Profile</Typography>
+        <Tooltip title='Account settings'>
           <IconButton
             onClick={handleClick}
-            size="small"
+            size='small'
             sx={{ ml: 2 }}
             aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
+            aria-haspopup='true'
             aria-expanded={open ? 'true' : undefined}
           >
             <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
@@ -37,7 +39,7 @@ const AccountMenu = ({ onClick }) => {
       </Box>
       <Menu
         anchorEl={anchorEl}
-        id="account-menu"
+        id='account-menu'
         open={open}
         onClose={handleClose}
         onClick={handleClose}
@@ -70,12 +72,14 @@ const AccountMenu = ({ onClick }) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={onClick}>
-          <Avatar /> Open Form
-        </MenuItem>
+        <Link to='/todo'>
+          <MenuItem onClick={onClick}>
+            <Avatar /> Open Form
+          </MenuItem>
+        </Link>
       </Menu>
     </React.Fragment>
   );
-}
+};
 
 export default AccountMenu;
